@@ -1,0 +1,17 @@
+actionname: 'max-dc-publisher'
+description: 'Publish DC using templates'
+inputs:
+  files:  # files to publish
+    description: 'Files to publish'
+    required: true
+outputs:
+  files:
+    description: "Random number"
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - --files="${{ inputs.files }}"
+    - --root="${GITHUB_WORKSPACE}"
+    - --output="${GITHUB_WORKSPACE}/dist"

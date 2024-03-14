@@ -1,0 +1,4 @@
+*.pdf
+dist/
+templates/typst/.template/cache
+node_modules

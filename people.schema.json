@@ -1,0 +1,194 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$ref": "#/definitions/People",
+    "definitions": {
+        "People": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "profile": {
+                    "$ref": "#/definitions/Profile"
+                },
+                "presentation": {
+                    "type": "string"
+                },
+                "skills": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Skill"
+                    }
+                },
+                "links": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Link"
+                    }
+                },
+                "education": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Education"
+                    }
+                },
+                "experiences": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Experience"
+                    }
+                }
+            },
+            "required": [
+                "experiences",
+                "links",
+                "profile",
+                "skills"
+            ],
+            "title": "People description"
+        },
+        "Education": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "dates": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "dates",
+                "location",
+                "name"
+            ],
+            "title": "Education"
+        },
+        "Experience": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "dates": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "skills": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "work": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Work"
+                    }
+                }
+            },
+            "required": [
+                "dates",
+                "description",
+                "name",
+                "title"
+            ],
+            "title": "Experience"
+        },
+        "Work": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "title": {
+                    "type": "string"
+                },
+                "content": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "content",
+                "title"
+            ],
+            "title": "Work"
+        },
+        "Link": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "icon": {
+                    "type": "string"
+                },
+                "text": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string",
+                    "format": "uri"
+                }
+            },
+            "required": [
+                "icon",
+                "text",
+                "url"
+            ],
+            "title": "Link"
+        },
+        "Profile": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "pronouns": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "experience": {
+                    "type": "string"
+                },
+                "availability": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "availability",
+                "experience",
+                "name",
+                "title"
+            ],
+            "title": "Profile"
+        },
+        "Skill": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "title": {
+                    "type": "string"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": [
+                "items",
+                "title"
+            ],
+            "title": "Skill"
+        }
+    }
+}

@@ -1,0 +1,32 @@
+# {{ profile.name }}
+
+**{{ profile.title }}**
+
+> {{ presentation }}
+
+## Compétences
+
+{{#each skills}}
+- **{{ this.title }}**: {{#join items sep=","}}{{ this }}{{/join}}
+{{/each}}
+
+## Expériences
+
+{{#each experiences}}
+
+### **{{ name }} - {{ title }}**
+
+*{{ dates }}*
+
+> {{ description }}
+
+{{#join skills sep=","}}{{ this }}{{/join}}
+
+{{#each work}}
+#### **{{ title }}**
+
+{{ content }}
+
+{{/each}}
+
+{{/each}}

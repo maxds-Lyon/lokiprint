@@ -1,0 +1,155 @@
+profile: 
+  name: Alma Rozanès
+  pronouns: (elle)
+  title: Développeuse Fullstack
+  experience: 5 ans
+  availability: mars 2024
+presentation: |-
+  Je m’épanouis dans un environnement diversifié et novateur où force de proposition et curiosité riment avec challenge relevé. Passionnée par la veille technologique, je partage mes découvertes sur https://github.com/almarzn.
+skills:
+  - title: Languages
+    items:
+      - Java
+      - Typescript
+      - Kotlin
+  - title: Frameworks
+    items:
+      - ReactJs
+      - Angular
+      - Spring Boot
+      - Spring Cloud
+      - Spring Webflux
+  - title: Tests
+    items:
+      - JUnit 5
+      - Mockito
+      - Cypress
+  - title: CI/CD
+    items:
+      - Jenkins
+      - TeamCity
+      - Docker
+      - Kubernetes
+      - Helm
+      - Kafka
+  - title: SGDB
+    items:
+      - Postgres
+      - Redis
+  - title: Outils
+    items: 
+      - Git
+      - Gitflow
+  - title: Méthodes
+    items:
+      - Agile
+  - title: Langues
+    items: 
+      - "Anglais : Bilingue"
+      - "Francais : Natif"
+links:
+  - icon: github
+    text: almarzn
+    url: https://github.com/almarzn
+  - icon: linkedin
+    text: alma.rozanes
+    url: https://linkedin.com/alma.rozanes
+  - icon: twitter
+    text: almaaaa
+    url: https://linkedin.com/alma.rozanes
+education:
+  - name: Diplôme informatique
+    location: IUT Lyon
+    dates: 2018 - 2023
+  - name: These de math
+    location: Faculté Lyon
+    dates: "2024"
+experiences:
+  - name: ENEDIS
+    title: Développeuse Full stack Java/Angular
+    dates: Août 2023 - Février 2024
+    description: |-
+      Participation à une équipe Agile R&D pour le développement et la maintenance d’une application de cartographie. Conception et développement d'une solution microfront Angular et d'une architecture cloud back avec Spring Cloud et Eureka.
+    skills:
+      - Java
+      - Spring Boot
+      - Spring Cloud Gateway
+      - Spring Webflux
+      - Hibernate
+      - Angular 16
+      - Typescript
+      - Rxjs
+      - Leaflet
+
+    work:
+      - title: Conception et développement
+        content: |-
+           - Création d'un outil de suivi et de recherche pour les chatbots de la MAIF, les serveurs vocaux et l'aide aux conseillers :
+             - Conception et développement de l'**architecture** globale de la solution pour prendre en compte les besoins des utilisateurs finaux et assurer la stabilité et les performances globales de l'application.
+             - Conception de l'**UX** / **UI**
+             - Optimisation de l'expérience des conseillers, data scientists et clients de la MAIF grâce à la détection des erreurs.
+           - Développements et maintenance sur un widget de chatbot, intégration dans leurs applications
+           - Modernisation complète de l'infrastructure réseau des chatbots
+             - mise en œuvre d'un serveur Spring Boot Webflux et d'une gateway personnalisée
+             - offre un accès simplifié et sécurisé aux applications de l'équipe. Avancées considérables en matière de sécurité et de simplification des processus pourl'ensemble de l'infrastructure.
+           - Développement d’un service d'agrégation de données depuis **Kafka** vers une base de donnée **Redis** avec **Spring Webflux**
+  - name: MAIF
+    title: Développeuse Full stack Java Kotlin
+    dates: Mars 2021 - Août 2023
+    description: |-
+      Conception et développement d'applicatifs pour l'équipe de data scientist, incluant un outil de suivi pour les chatbots, serveurs vocaux, et support conseillers.
+    skills:
+      - Java
+      - Kotlin
+      - Spring Boot
+      - Spring Cloud Gateway
+      - Spring Webflux
+      - React
+      - Typescript
+      - Docker
+      - Kubernetes
+      - Helm
+      - Jenkins
+      - Kafka
+      - Rasa
+    work:
+      - title: Développements
+        content: Développement et maintenance d'une application web de gestion et de recherche documentaire, spécification et ajout de fonctionnalités, réalisation et maintenance d’un microservice de publication, développement d’un moteur de rendu, d’un taglib JSP complet, modification de Saiku BI 2.6 pour intégration, indexation avec Apache Lucene, et développement d’une application Angular + Spring + Hibernate avec mise en place de tests unitaires et d’intégration.
+
+  - name: Sopra Steria
+    title: Développeuse Java
+    dates: Septembre 2020 - Février 2021
+    description: |-
+      Développement et maintenance fullstack d'une application de gestion pour bailleurs sociaux.
+    skills:
+      - Java 1.6
+      - Struts
+      - JSP
+      - AS400
+    work:
+      - title: Développements
+        content: Développement et maintenance d'une application web de gestion et de recherche documentaire, spécification et ajout de fonctionnalités, réalisation et maintenance d’un microservice de publication, développement d’un moteur de rendu, d’un taglib JSP complet, modification de Saiku BI 2.6 pour intégration, indexation avec Apache Lucene, et développement d’une application Angular + Spring + Hibernate avec mise en place de tests unitaires et d’intégration.
+
+  - name: DECALOG
+    title: Développeur Full Stack
+    dates: Octobre 2018 - Août 2020
+    description: |-
+      Développement et maintenance fullstack d'une application de gestion documentaire.
+    skills:
+      - Java
+      - JavaScript
+      - Typescript
+      - Kotlin
+      - Spring
+      - JEE
+      - JSP
+      - CVS
+      - SVN
+      - Junit
+      - Angular
+      - MySQL
+      - Postgres
+      - Hibernate
+    work:
+      - title: Développements
+        content: Développement et maintenance d'une application web de gestion et de recherche documentaire, spécification et ajout de fonctionnalités, réalisation et maintenance d’un microservice de publication, développement d’un moteur de rendu, d’un taglib JSP complet, modification de Saiku BI 2.6 pour intégration, indexation avec Apache Lucene, et développement d’une application Angular + Spring + Hibernate avec mise en place de tests unitaires et d’intégration.
