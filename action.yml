@@ -10,5 +10,5 @@ runs:
   image: 'Dockerfile'
   args:
     - --files="${{ inputs.files }}"
-    - --root="$GITHUB_WORKSPACE"
-    - --output="$GITHUB_WORKSPACE/dist"
+    - --root="."
+    - --output="./dist"
