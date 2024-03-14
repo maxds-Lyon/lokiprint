@@ -4,6 +4,8 @@ import yargs from "yargs";
 
 const argv = yargs(process.argv.slice(2)).parse();
 
+console.log(`Using glob ${argv.files.split(' ')} on ${argv.root ?? process.cwd}`)
+
 const files = await Promise.all(argv.files.split(' ').map(el => glob(el, {
     cwd: argv.root ?? process.cwd,
 })))
