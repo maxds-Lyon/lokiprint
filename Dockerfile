@@ -7,4 +7,4 @@ RUN apk add typst --repository=https://dl-cdn.alpinelinux.org/alpine/edge/testin
 RUN npm ci
 ENV EXECUTOR=local
 
-ENTRYPOINT ["node", "index.mjs"]
+ENTRYPOINT ["node", "/app/index.mjs"]

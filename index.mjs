@@ -8,7 +8,6 @@ const files = await Promise.all(argv.files.split(' ').map(el => glob(el, {
     cwd: argv.root ?? process.cwd,
 })))
 
-
 const publish = createPublish({
     files: files.flatMap(it => it),
     executor: argv.e ?? argv.executor ?? process.env.EXECUTOR,

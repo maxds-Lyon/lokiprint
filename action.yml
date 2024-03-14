@@ -4,9 +4,6 @@ inputs:
   files:  # files to publish
     description: 'Files to publish'
     required: true
-outputs:
-  files:
-    description: "Random number"
 
 runs:
   using: 'docker'
