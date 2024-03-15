@@ -16,7 +16,7 @@ export const createPublish = ({
 
     console.log(chalk.green('Loaded template functions [' + templateFunctions.map(it => it.id).join(", ") + ']'));
 
-    await Promise.all(
+    return (await Promise.all(
         files
             .filter(it => it.endsWith('.yaml') || it.endsWith('.yml'))
             .map(async (file) => {
@@ -30,12 +30,14 @@ export const createPublish = ({
                 if (!valid) {
                     console.log(chalk.red(`  ❌ ${file} is invalid`));
 
-                    console.log(validate.errors
+                    const message = validate.errors
                         .map(({ instancePath, keyword, message }) => `    ${chalk.gray(instancePath.replaceAll('/', '.')) || '<root>'}: ${chalk.yellow(keyword)} ${message}`)
                         .join('\n')
-                    );
+                    
 
-                    return;
+                    console.log(message);
+
+                    return [{ item: file, message, status: 'error' }];
                 }
 
                 console.log(chalk.blueBright(`  ${file} is valid`));
@@ -46,6 +48,8 @@ export const createPublish = ({
 
                         await fs.mkdir(templateWorkdir, { recursive: true });
 
+                        const item = `${name}.${template.extension}`;
+
                         try {
                             const resultFile = await template.fn({
                                 data,
@@ -54,18 +58,22 @@ export const createPublish = ({
 
                             await fs.mkdir(output, { recursive: true });
 
-                            await fs.cp(resultFile, join(output, name + '.' + template.extension));
+                            const outputFile = join(output, name + '.' + template.extension);
 
-                            console.log(chalk.green(`  ✅ ${name}.${template.extension} has been generated`));
+                            await fs.cp(resultFile, outputFile);
+
+                            console.log(chalk.green(`  ✅ ${item} has been generated`));
+
+                            return { item, status: 'success', file: outputFile};
                         } catch (err) {
-                            console.log(chalk.red(`  ❌ ${name}.${template.extension} could not be generated:`));
+                            console.log(chalk.red(`  ❌ ${item} could not be generated:`));
 
                             console.log('    ' + err.message.split('\n').join('\n    '));
 
-                            return;
+                            return { item, status: 'error', message: err.message};
                         }
                     })
                 );
             })
-    );
+    )).flatMap(el => el);
 };

@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@slack/web-api": "^7.0.2",
     "ajv": "^8.12.0",
     "ajv-formats": "^2.1.1",
     "chalk": "^5.3.0",
