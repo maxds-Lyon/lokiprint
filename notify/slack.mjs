@@ -1,13 +1,30 @@
 import { WebClient } from '@slack/web-api';
+import { promises as fs } from 'fs';
+import { join } from 'path';
 
+const getCache = async (key) => {
+    const cacheFolder = join(process.env.CACHE_FOLDER, "slack-notifier");
 
-export const notifySlack = (argv) => { 
-    const token = process.env.SLACK_TOKEN;
-    const usernameField = process.env.SLACK_GH_USERNAME_FIELD;
-    const ghUsername = argv.u ?? argv.username;
-    const web = new WebClient(token);
+    await fs.mkdir(cacheFolder, { recursive: true });
 
-    const findUserWithGithubHandle = async (userList) => {
+    return {
+        write: (content) => fs.writeFile(join(cacheFolder, key), JSON.stringify(content), 'utf-8'),
+        read: async () => {
+            try {
+                JSON.parse(await fs.readFile(join(cacheFolder, key), 'utf-8'))
+            } catch (err) {
+                console.log("Cannot read cache: " + err.message);
+            }
+        }
+    }
+}
+
+const getSendResults = ({ 
+    web,
+    cache,
+    usernameField
+}) => {
+    const findUserWithGithubHandle = async (userList, username) => {
         for (const member of userList.members) {
             const profile = await web.users.profile.get({
                 user: member.id
@@ -16,21 +33,28 @@ export const notifySlack = (argv) => {
             if (!profile.ok) {
                 throw new Error(profile.error);
             }
-    
-            if (profile.profile.fields[usernameField]
-                && profile.profile.fields[usernameField].alt === ghUsername) {
-                return member.id
+
+            if (profile.profile.fields[usernameField]) {
+                cache[profile.profile.fields[usernameField].alt] = member.id;
+
+                if (profile.profile.fields[usernameField].alt === username) {
+                    return member.id
+                }
             }
         }
 
         return null;
     }
 
-    const getMatchingUserId = async() => {
+    const getMatchingUserId = async (username) => {
+        if (cache[username]) {
+            return cache[username];
+        }
+
         const userList = await web.users.list();
 
         if (userList.ok) {
-            const memberId = await findUserWithGithubHandle(userList);
+            const memberId = await findUserWithGithubHandle(userList, username);
 
             if (!memberId) {
                 console.log(`Could not notify [${memberId}]`);
@@ -54,9 +78,8 @@ export const notifySlack = (argv) => {
         throw new Error(conv.error);
     }
 
-    return async (results) => {
-
-        const userId = await getMatchingUserId();
+    const sendResults = async (username, results) => {
+        const userId = await getMatchingUserId(username);
 
         if (!userId) {
             return;
@@ -91,6 +114,32 @@ results.map(res => res.status == 'success' ? ` - :white_check_mark:  ${res.item}
                 })),
             channel_id: convId,
         })
+    }
+
+    return sendResults;
+}
+
+export const notifySlack = (argv) => { 
+    const token = process.env.SLACK_TOKEN;
+    const slackNotify = argv['slack-notify'];
+
+    if (!slackNotify) return () => Promise.resolve();
+
+    const [usernameField, author] = slackNotify.split("=");
+
+    return async (results) => {
+        const userMappingCache = await getCache("user_mappings");
+        const cache = await userMappingCache.read() ?? {};
+
+        const sendResults = getSendResults({
+            web: new WebClient(token),
+            usernameField,
+            cache
+        });
+
+        await sendResults(author, results);
+
+        await userMappingCache.write(cache);
     }
 }
 

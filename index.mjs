@@ -20,6 +20,4 @@ const publish = createPublish({
 
 const results = await publish();
 
-const targets = (argv.n ?? argv.notify ?? "").split(",") ?? []
-
-await Promise.all(targets.map(target => notify[target](argv)(results)));
+await Promise.all(notify.map(factory => factory(argv)(results)));
