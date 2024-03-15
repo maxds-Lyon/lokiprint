@@ -123,6 +123,8 @@ export const notifySlack = (argv) => {
     const token = process.env.SLACK_TOKEN;
     const slackNotify = argv['slack-notify'];
 
+    console.log(slackNotify, argv);
+
     if (!slackNotify) return () => Promise.resolve();
 
     const [usernameField, author] = slackNotify.split("=");
