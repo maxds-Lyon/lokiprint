@@ -96,10 +96,7 @@
                 }
             },
             "required": [
-                "dates",
-                "description",
-                "name",
-                "title"
+                "name"
             ],
             "title": "Experience"
         },
@@ -115,8 +112,7 @@
                 }
             },
             "required": [
-                "content",
-                "title"
+                "content"
             ],
             "title": "Work"
         },
