@@ -123,11 +123,9 @@ export const notifySlack = (argv) => {
     const token = process.env.SLACK_TOKEN;
     const slackNotify = argv['slack-notify'];
 
-    console.log(slackNotify, argv);
+    console.log({ slackNotify, actor: process.env.GITHUB_ACTOR})
 
     if (!slackNotify) return () => Promise.resolve();
-
-    const [usernameField, author] = slackNotify.split("=");
 
     return async (results) => {
         const userMappingCache = await getCache("user_mappings");
@@ -135,11 +133,11 @@ export const notifySlack = (argv) => {
 
         const sendResults = getSendResults({
             web: new WebClient(token),
-            usernameField,
+            usernameField: slackNotify,
             cache
         });
 
-        await sendResults(author, results);
+        await sendResults(process.env.GITHUB_ACTOR, results);
 
         await userMappingCache.write(cache);
     }
