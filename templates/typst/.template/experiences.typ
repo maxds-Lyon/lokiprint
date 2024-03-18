@@ -26,7 +26,7 @@
           )
         ]
         #if ("description" in content) [
-          #set par(justify: true, leading: 0.52em)
+          #set par(justify: true)
           #cmarker.render(content.description)
         ]
       ]
