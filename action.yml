@@ -4,7 +4,10 @@ inputs:
   files:  # files to publish
     description: 'Files to publish'
     required: true
-
+  slack-notify:
+    description: 'The field ID that contains the github username mapping in slack, followed by a = and the github username to look for. If not specified, no mesage will be sent.'
+    required: false
+    default: false
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -12,3 +15,4 @@ runs:
     - --files="${{ inputs.files }}"
     - --root="."
     - --output="./dist"
+    - --slack-notify="${{ inputs.slack-notify }}"
