@@ -2,6 +2,7 @@ import { createPublish } from "./createPublish.mjs";
 import { glob } from 'glob';
 import notify from './notify/index.mjs';
 import yargs from "yargs";
+import * as fs from "node:fs";
 
 const argv = yargs(process.argv.slice(2)).parse();
 

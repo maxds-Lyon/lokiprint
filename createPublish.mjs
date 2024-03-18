@@ -37,7 +37,7 @@ export const createPublish = ({
 
                     console.log(message);
 
-                    return [{ item: file, message, status: 'error' }];
+                    return [{ data, item: file, message, status: 'error' }];
                 }
 
                 console.log(chalk.blueBright(`  ${file} is valid`));
@@ -64,13 +64,13 @@ export const createPublish = ({
 
                             console.log(chalk.green(`  ✅ ${item} has been generated`));
 
-                            return { item, status: 'success', file: outputFile};
+                            return { data, item, status: 'success', file: outputFile};
                         } catch (err) {
                             console.log(chalk.red(`  ❌ ${item} could not be generated:`));
 
                             console.log('    ' + err.message.split('\n').join('\n    '));
 
-                            return { item, status: 'error', message: err.message};
+                            return { data, item, status: 'error', message: err.message};
                         }
                     })
                 );

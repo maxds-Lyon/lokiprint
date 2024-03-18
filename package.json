@@ -3,10 +3,13 @@
     "@slack/web-api": "^7.0.2",
     "ajv": "^8.12.0",
     "ajv-formats": "^2.1.1",
+    "axios": "^1.6.8",
     "chalk": "^5.3.0",
     "execa": "^8.0.1",
+    "form-data": "^4.0.0",
     "glob": "^10.3.10",
     "handlebars": "^4.7.8",
+    "jsonwebtoken": "^9.0.2",
     "yaml": "^2.3.4",
     "yargs": "^17.7.2"
   }
