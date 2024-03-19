@@ -99,7 +99,7 @@ const createNotifier = () => {
 
 
 export const notifyBoond = (argv) => {
-    if (argv.b || argv.boond) {
+    if (String(argv.b ?? argv.boond) === 'true') {
         return createNotifier();
     }
 
