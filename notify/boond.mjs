@@ -33,7 +33,7 @@ const createNotifier = () => {
         const { data } = await client.get("/resources", { params });
 
         if (data.data && data.data.length !== 1) {
-            throw new Error(`Expected only one result when searching for [${name}], got ${data.data}`);
+            return null;
         }
 
         return data.data[0];
@@ -78,18 +78,26 @@ const createNotifier = () => {
 
         await Promise.all(Object.entries(perUser)
             .map(async ([username, documents]) => {
-                const {id: userId} = await searchUser(username);
+                const user = await searchUser(username);
 
-                await deletePreviousResumes(userId);
+                if (!user) {
+                    return console.log('  ✖️ Could not find user ' + username);
+                }
+
+                await deletePreviousResumes(user.id);
 
                 for (const document of documents) {
                     await uploadDocument({
-                        parentId: userId,
+                        parentId: user.id,
                         parentType: 'resourceResume',
                         file: document.file,
                         prefix: documentPrefix
                     })
                 }
+
+                console.log(
+                    `  ➖ Uploaded ${documents.length} documents for user ${username}`
+                )
             })
         )
 
