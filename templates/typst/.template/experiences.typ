@@ -18,13 +18,17 @@
           column-gutter: 12pt,
           columns: (1fr, auto),
           text(fill: tailwind.orange-500)[=== #content.name],
-          align(bottom, text(baseline: -1pt, content.dates))
+          align(bottom, text(baseline: -1pt, if ("dates" in content) [#content.dates] else [""]))
         )
-        #block(
-          heading(level: 4, content.title)
-        )
-        #set par(justify: true)
-        #content.description
+        #if ("title" in content) [
+          #block(
+            heading(level: 4, content.title)
+          )
+        ]
+        #if ("description" in content) [
+          #set par(justify: true)
+          #cmarker.render(content.description)
+        ]
       ]
 
       #if ("work" in content) [
@@ -32,7 +36,9 @@
           ==== Réalisations
           #for el in content.work [
             #flex(gap: 12pt)[
-              ===== #el.title
+              #if ("title" in el) [
+                ===== #el.title
+              ]
 
               #cmarker.render(el.content)
             ]
