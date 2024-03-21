@@ -5,10 +5,23 @@ import { join, basename } from 'path';
 import chalk from "chalk";
 import { createValidate } from "./createValidate.mjs";
 import { executors } from "./executors.mjs";
+function generateTimestampForFilename() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = (now.getMonth() + 1).toString().padStart(2, '0');
+    const day = now.getDate().toString().padStart(2, '0');
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const seconds = now.getSeconds().toString().padStart(2, '0');
+
+    return `${year}${month}${day}-${hours}${minutes}${seconds}`;
+}
 
 export const createPublish = ({
     files, executor, workdir, output
 }) => async function publish() {
+
+    const timestamp = generateTimestampForFilename();
 
     const validate = await createValidate();
 
@@ -48,7 +61,7 @@ export const createPublish = ({
 
                         await fs.mkdir(templateWorkdir, { recursive: true });
 
-                        const item = `${name}.${template.extension}`;
+                        const item = `${name}-${timestamp}+${process.env.GITHUB_SHA.slice(0, 7)}.${template.extension}`;
 
                         try {
                             const resultFile = await template.fn({
@@ -58,7 +71,7 @@ export const createPublish = ({
 
                             await fs.mkdir(output, { recursive: true });
 
-                            const outputFile = join(output, name + '.' + template.extension);
+                            const outputFile = join(output, item);
 
                             await fs.cp(resultFile, outputFile);
 

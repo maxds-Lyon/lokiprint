@@ -32,7 +32,7 @@ const createNotifier = () => {
 
         const { data } = await client.get("/resources", { params });
 
-        if (data.data && data.data.length !== 1) {
+        if (data.data?.length !== 1) {
             return null;
         }
 
