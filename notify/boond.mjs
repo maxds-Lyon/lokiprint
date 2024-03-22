@@ -23,7 +23,7 @@ const createClient = () => axios.create({
 
 const createNotifier = () => {
     const client = createClient();
-    const documentPrefix = process.env.BOOND_DOCUMENT_PREFIX ?? 'mdcp_';
+    const documentPrefix = process.env.BOOND_DOCUMENT_PREFIX ?? 'lokiprint-';
 
     const searchUser = async (name) => {
         const params = new URLSearchParams();
