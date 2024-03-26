@@ -4,7 +4,8 @@
 ## Local run
 
 ```
-podman run -v /path-to-local-repository:/input -v $(pwd)/dist:/output -e "CACHE_FOLDER=/cache" -v $(pwd)/cache:/cache publisher:latest --files="/input/**.yaml" --output="/output"
+podman build . -t publisher:latest
+podman run -v "/path-to-local-repository":/input -v "$(pwd)/dist":/output -e "CACHE_FOLDER=/cache" -v "$(pwd)/cache":/cache publisher:latest --files="/input/**.yaml" --output="/output"
 ```
 
 ### CLI Configuration
