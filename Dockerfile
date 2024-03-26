@@ -1,5 +1,7 @@
 FROM docker.io/node:21-alpine3.18
 
+LABEL tags=0.3.0
+
 COPY . /app/
 WORKDIR /app
 RUN apk add npm pandoc
