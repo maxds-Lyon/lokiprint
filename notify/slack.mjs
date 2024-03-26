@@ -1,6 +1,6 @@
-import { WebClient } from '@slack/web-api';
-import { promises as fs } from 'fs';
-import { join } from 'path';
+import {WebClient} from '@slack/web-api';
+import {promises as fs} from 'fs';
+import {join} from 'path';
 
 const getCache = async (key) => {
     const cacheFolder = join(process.env.CACHE_FOLDER, "slack-notifier");
@@ -78,7 +78,9 @@ const getSendResults = ({
         throw new Error(conv.error);
     }
 
-    const sendResults = async (username, results) => {
+    return async (username, results) => {
+        console.log(`🟣 Sending slack notification`);
+
         const userId = await getMatchingUserId(username);
 
         if (!userId) {
@@ -87,7 +89,7 @@ const getSendResults = ({
 
         const convId = await openChat(userId);
 
-        web.chat.postMessage({
+        await web.chat.postMessage({
             blocks: [{
                 "type": "section",
                 "text": {
@@ -95,16 +97,16 @@ const getSendResults = ({
                     "text": `*Oh oh oh!* Voici le ou les DC demandés :streetloki:
 
 ${
-results.map(res => res.status == 'success' ? ` - :white_check_mark:  ${res.item} a pu être généré` :
-    ` - :x:  ${res.item} n'a pas pu être généré, pour cause: \`${res.message.trim()}\``).join('\n')
-}`
+                        results.map(res => res.status === 'success' ? ` - :white_check_mark:  ${res.item} a pu être généré` :
+                            ` - :x:  ${res.item} n'a pas pu être généré, pour cause: \`${res.message.trim()}\``).join('\n')
+                    }`
                 }
             }],
             text: `Oh oh oh! Voici le ou les DC demandés :streetloki:`,
             channel: convId
         })
 
-        web.files.uploadV2({
+        await web.files.uploadV2({
             file_uploads: results
                 .filter(result => result.status === 'success')
                 .map(result => ({
@@ -114,16 +116,15 @@ results.map(res => res.status == 'success' ? ` - :white_check_mark:  ${res.item}
                 })),
             channel_id: convId,
         })
-    }
 
-    return sendResults;
+        console.log('  ✅ Successfully sent slack notification.');
+
+    };
 }
 
 export const notifySlack = (argv) => { 
     const token = process.env.SLACK_TOKEN;
     const slackNotify = argv['slack-notify'];
-
-    console.log({ slackNotify, actor: process.env.GITHUB_ACTOR})
 
     if (!slackNotify) return () => Promise.resolve();
 
