@@ -73,6 +73,9 @@
                 "name": {
                     "type": "string"
                 },
+                "badge": {
+                    "type": "string"
+                },
                 "title": {
                     "type": "string"
                 },
