@@ -26,7 +26,7 @@ export const createPublish = ({
     const timestamp = generateTimestampForFilename();
     const validate = await createValidate();
 
-    async function extractOutputFromTemplate({ template, data, templateWorkdir, item, simpleItem }) {
+    async function executeTemplateAndExtractOutput({ template, data, templateWorkdir, item, simpleItem }) {
         const resultFile = await template.fn({
             data,
             workdir: templateWorkdir,
@@ -35,12 +35,10 @@ export const createPublish = ({
         await fs.mkdir(output, { recursive: true });
 
         const outputFile = join(output, item);
-        await fs.cp(resultFile, outputFile);
+        const simpleOutputFile = join(output, simpleItem);
 
-        if (item != simpleItem) {
-            const simpleOutputFile = join(output, simpleItem);
-            await fs.cp(resultFile, simpleOutputFile);
-        }
+        await fs.cp(resultFile, outputFile);
+        await fs.cp(resultFile, simpleOutputFile);
 
         console.log(chalk.green(`  ✅ ${item} has been generated`));
 
@@ -56,7 +54,7 @@ export const createPublish = ({
         const simpleItem = `${name}.${template.extension}`;
 
         try {
-            return extractOutputFromTemplate({ template, data, templateWorkdir, item, simpleItem })
+            return executeTemplateAndExtractOutput({ template, data, templateWorkdir, item, simpleItem })
         } catch (err) {
             console.log(chalk.red(`  ❌ ${item} could not be generated:`));
 
@@ -72,7 +70,7 @@ export const createPublish = ({
         );
     }
 
-    function invalideFileTreatment(file, data) {
+    function printYamlErrors(file, data) {
         console.log(chalk.red(`  ❌ ${file} is invalid`));
 
         const message = validate.errors
@@ -93,7 +91,7 @@ export const createPublish = ({
         const valid = validate(data);
 
         if (!valid) {
-            return invalideFileTreatment(file, data);
+            return printYamlErrors(file, data);
         }
 
         console.log(chalk.blueBright(`  ${file} is valid`));
@@ -109,15 +107,10 @@ export const createPublish = ({
         const yamlFiles = retrieveYamlFiles();
 
         return (await Promise.all(
-            yamlFiles.map(async (file) => processFile(file))
+            yamlFiles.map((file) => processFile(file))
         )).flatMap(el => el);
     }
 
-    async function doPublish() {
-        console.log(chalk.green('Loaded template functions [' + templateFunctions.map(it => it.id).join(", ") + ']'));
-
-        return processFiles();
-    }
-
-    return doPublish();
+    console.log(chalk.green('Loaded template functions [' + templateFunctions.map(it => it.id).join(", ") + ']'));
+    return processFiles();
 };
