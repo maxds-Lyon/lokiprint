@@ -9,6 +9,6 @@ export const executors = {
     podman: ({
         cwd, image, command, executable
     }) => {
-        return $`podman run -w=${cwd} -v ${cwd}:${cwd}:rshared --entrypoint=${executable} ${image} ${command}`;
+        return $`podman run --rm -w=${cwd} -v ${cwd}:${cwd}:rshared --entrypoint=${executable} ${image} ${command}`;
     }
 };

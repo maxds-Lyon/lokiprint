@@ -1,11 +1,30 @@
 import { promises as fs } from 'fs';
 import { join } from 'path';
-import { fetchFonts } from './fetch-fonts.mjs';
+import { $ } from 'execa';
 
 export default async (executor) => {
+    async function tryExecuteTypst(fontDir, workdir) {
+        try {
+            await executor({
+                cwd: workdir,
+                image: 'ghcr.io/typst/typst:v0.10.0',
+                executable: 'typst',
+                command: [
+                    'compile',
+                    '--root', workdir,
+                    '--font-path', join(workdir, fontDir),
+                    join(workdir, 'main.typ'),
+                    join(workdir, 'output.pdf')
+                ]
+            });
+        } catch (err) {
+            throw new Error(err.stderr);
+        }
+    }
+
     const fontDir = '.template/cache/fonts';
     await fs.mkdir(join(import.meta.dirname, fontDir), { recursive: true });
-    await fetchFonts(join(import.meta.dirname, 'main.typ'), join(import.meta.dirname, fontDir));
+    await $`cp -r ${join(import.meta.dirname, ".template/fonts")}/. ${join(import.meta.dirname, fontDir)}`
 
     return {
         id: 'typst',
@@ -16,22 +35,7 @@ export default async (executor) => {
             await fs.cp(join(import.meta.dirname, '.template'), join(workdir, '.template'), { recursive: true });
             await fs.cp(join(import.meta.dirname, 'main.typ'), join(workdir, 'main.typ'));
 
-            try {
-                await executor({
-                    cwd: workdir,
-                    image: 'ghcr.io/typst/typst:v0.10.0',
-                    executable: 'typst',
-                    command: [
-                        'compile', 
-                        '--root', workdir,
-                        '--font-path', join(workdir, fontDir),
-                        join(workdir, 'main.typ'), 
-                        join(workdir, 'output.pdf')
-                    ]
-                });
-            } catch (err) {
-                throw new Error(err.stderr);
-            }
+            await tryExecuteTypst(fontDir, workdir);
 
             return join(workdir, 'output.pdf');
         }
