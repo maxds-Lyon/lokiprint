@@ -19,16 +19,31 @@ function generateTimestampForFilename() {
 }
 
 export const createPublish = ({
-    files, executor, workdir, output
+    files, executor, workdir, output, globals
 }) => async function publish() {
 
     const templateFunctions = await Promise.all(templates.map((template) => template(executors[executor])));
     const timestamp = generateTimestampForFilename();
     const validate = await createValidate();
 
+    async function mergeWithGlobals(config) {
+        if (!globals) {
+            console.log("  ⚠️ No globals specified.");
+
+            return config;
+        }
+
+        const globalsContent = await fs.readFile(globals, 'utf-8');
+
+        return {
+            ...YAML.parse(globalsContent),
+            ...config
+        };
+    }
+
     async function executeTemplateAndExtractOutput({ template, data, templateWorkdir, item, simpleItem }) {
         const resultFile = await template.fn({
-            data,
+            data: await mergeWithGlobals(data),
             workdir: templateWorkdir,
         });
 
@@ -112,5 +127,6 @@ export const createPublish = ({
     }
 
     console.log(chalk.green('Loaded template functions [' + templateFunctions.map(it => it.id).join(", ") + ']'));
+
     return processFiles();
 };

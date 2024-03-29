@@ -10,7 +10,7 @@
 
 #let content = yaml("data.json")
 
-#styles.default[
+#styles.default(content.legal-information)[
     #block(inset: (x: 24pt), flex(
       gap: 32pt,
       {
