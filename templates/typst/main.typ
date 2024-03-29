@@ -1,6 +1,3 @@
-// @font-face(url=https://fonts.google.com/download?family=Lexend)
-// @font-face(dir=.template/fonts/)
-
 #import "@preview/fontawesome:0.1.0": *
 #import ".template/title.typ": title
 #import ".template/competencies.typ": competencies
