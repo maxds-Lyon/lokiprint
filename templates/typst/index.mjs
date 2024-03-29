@@ -25,7 +25,6 @@ export default async (executor) => {
         id: 'typst',
         extension: 'pdf',
         fn: async ({data, workdir}) => {
-            console.log(data)
             await fs.writeFile(workdir + '/data.json', JSON.stringify(data), 'utf-8');
 
             await fs.cp(join(import.meta.dirname, '.template'), join(workdir, '.template'), { recursive: true });

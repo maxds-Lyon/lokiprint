@@ -42,7 +42,7 @@ const publish = createPublish({
     executor: argv.e ?? argv.executor ?? process.env.EXECUTOR,
     workdir: argv.w ?? argv.workdir ?? "/tmp/max-publisher",
     output: argv.o ?? argv.output ?? "/output",
-    globals: argv.globals ?? argv.globals,
+    globals: argv.g ?? argv.globals,
 });
 
 const results = await publish();
