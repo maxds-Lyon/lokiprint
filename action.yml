@@ -12,6 +12,9 @@ inputs:
     description: 'The field ID that contains the github username mapping in slack, followed by a = and the github username to look for. If not specified, no mesage will be sent.'
     required: false
     default: false
+  globals-file:
+    description: 'Globals file to merge data from'
+
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -21,3 +24,4 @@ runs:
     - --output="./dist"
     - --slack-notify="${{ inputs.slack-notify }}"
     - --boond=${{ inputs.push-to-boond }}
+    - --globals=${{ inputs.globals-file }}

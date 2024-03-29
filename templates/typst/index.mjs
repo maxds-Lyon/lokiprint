@@ -1,6 +1,5 @@
-import { promises as fs } from 'fs';
-import { join } from 'path';
-import { $ } from 'execa';
+import {promises as fs} from 'fs';
+import {join} from 'path';
 
 export default async (executor) => {
     async function tryExecuteTypst(fontDir, workdir) {
@@ -12,7 +11,7 @@ export default async (executor) => {
                 command: [
                     'compile',
                     '--root', workdir,
-                    '--font-path', join(workdir, fontDir),
+                    '--font-path', fontDir,
                     join(workdir, 'main.typ'),
                     join(workdir, 'output.pdf')
                 ]
@@ -21,10 +20,6 @@ export default async (executor) => {
             throw new Error(err.stderr);
         }
     }
-
-    const fontDir = '.template/cache/fonts';
-    await fs.mkdir(join(import.meta.dirname, fontDir), { recursive: true });
-    await $`cp -r ${join(import.meta.dirname, ".template/fonts")}/. ${join(import.meta.dirname, fontDir)}`
 
     return {
         id: 'typst',
@@ -35,7 +30,7 @@ export default async (executor) => {
             await fs.cp(join(import.meta.dirname, '.template'), join(workdir, '.template'), { recursive: true });
             await fs.cp(join(import.meta.dirname, 'main.typ'), join(workdir, 'main.typ'));
 
-            await tryExecuteTypst(fontDir, workdir);
+            await tryExecuteTypst(join(import.meta.dirname, '.template/fonts'), workdir);
 
             return join(workdir, 'output.pdf');
         }

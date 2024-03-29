@@ -41,7 +41,8 @@ const publish = createPublish({
     files: files.flatMap(it => it),
     executor: argv.e ?? argv.executor ?? process.env.EXECUTOR,
     workdir: argv.w ?? argv.workdir ?? "/tmp/max-publisher",
-    output: argv.o ?? argv.output ?? "/output"
+    output: argv.o ?? argv.output ?? "/output",
+    globals: argv.g ?? argv.globals,
 });
 
 const results = await publish();

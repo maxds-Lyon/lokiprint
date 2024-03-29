@@ -7,7 +7,7 @@
 #let margin-large = block.with(inset: (x: 32pt));
 #let margin-xlarge = block.with(inset: (x: 48pt));
 
-#let default(body) = {
+#let default(footerContent, body) = {
   let footer-size = 64pt
   let base-margin = 24pt
 
@@ -20,18 +20,7 @@
     footer: page-footer(
       height: footer-size, 
       background: tailwind.slate-200,
-      content: (
-        header: "Max Digital Services Lyon",
-        sub: [SIRET -- 56789876511],
-        contact1: (
-          name: [Kevin Delfour],
-          phone: [01 02 03 04 05]
-        ),
-        contact2: (
-          name: [Ornella Del Prado],
-          phone: [07 93 10 02 30]
-        )
-      )
+      content: footerContent
     ),
     margin: (x: 0pt, top: 0pt, bottom: footer-size)
   )
