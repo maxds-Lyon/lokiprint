@@ -40,8 +40,15 @@
         styles.margin-small(
           competencies(content.skills)
         )
+      })
+    )
 
+    #pagebreak(weak: true)
+    #block(inset: (x: 24pt, top: 48pt), flex(
+      gap: 32pt,
+      {
         if ("education" in content) [
+
           #styles.margin-large()[
             #styles.section-heading(fa-user-graduate(baseline: -2pt), [Formation])
           ]
