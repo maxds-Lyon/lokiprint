@@ -43,8 +43,7 @@
       })
     )
 
-    #pagebreak(weak: true)
-    #block(inset: (x: 24pt, top: 48pt), flex(
+    #block(breakable: true, inset: (x: 24pt, top: 48pt), flex(
       gap: 32pt,
       {
         if ("education" in content) [
