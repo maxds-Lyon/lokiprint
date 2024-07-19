@@ -48,7 +48,7 @@
           #for el in content.work [
             #flex(gap: 12pt)[
               #if ("title" in el) [
-                ===== #el.title
+                ====== #el.title
               ]
 
               #cmarker.render(el.content)

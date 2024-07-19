@@ -39,7 +39,6 @@
             },
             "required": [
                 "experiences",
-                "links",
                 "profile",
                 "skills"
             ],
