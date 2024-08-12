@@ -5,7 +5,8 @@
 
 ```
 podman build . -t publisher:latest
-podman run -v "/path-to-local-repository":/input -v "$(pwd)/dist":/output -e "CACHE_FOLDER=/cache" -v "$(pwd)/cache":/cache publisher:latest --files="/input/**.yaml" --output="/output"
+podman rm local-lokiprint  
+podman run --name local-lokiprint -v "/path-to-local-repository":/input -v "$(pwd)/dist":/output -e "CACHE_FOLDER=/cache" -v "$(pwd)":/app -v -v "$(pwd)/cache":/cache publisher:latest --files="/input/people/**.yaml" --output="/output" --globals="/input/maxds.yaml"
 ```
 
 ### CLI Configuration

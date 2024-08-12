@@ -3,7 +3,7 @@
 #import ".template/competencies.typ": competencies
 #import ".template/about.typ": about-section
 #import ".template/education.typ": education
-#import ".template/presentation.typ": presentation-section
+#import ".template/presentation.typ": presentation-section, links-section
 #import ".template/experiences.typ": experience-block
 #import ".template/shared/flex.typ": *
 #import ".template/styles.typ"
@@ -28,8 +28,14 @@
         if ("presentation" in content) [ 
           #styles.margin-large()[
             #set par(justify: true)
-            
-            #presentation-section(content.presentation, content.links)
+            #presentation-section(content.presentation)
+          ]
+        ]
+
+        if ("links" in content) [ 
+          #styles.margin-large()[
+            #set par(justify: true)
+            #links-section(content.links)
           ]
         ]
 
@@ -40,8 +46,15 @@
         styles.margin-small(
           competencies(content.skills)
         )
+      })
+    )
 
+    #pagebreak(weak: true)
+    #block(inset: (x: 24pt, top: 48pt), flex(
+      gap: 32pt,
+      {
         if ("education" in content) [
+
           #styles.margin-large()[
             #styles.section-heading(fa-user-graduate(baseline: -2pt), [Formation])
           ]

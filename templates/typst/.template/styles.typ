@@ -42,14 +42,17 @@
   show heading.where(level: 3): set text(weight: "extrabold", size: scale.h3)
   // show heading.where(level: 3): set block(spacing: 20pt)
 
-  show heading.where(level: 4): set text(weight: "semibold", size: scale.h4)
+  show heading.where(level: 4): set text(weight: "bold", size: scale.h4)
   // show heading.where(level: 4): set block(spacing: 20pt)
 
-  show heading.where(level: 5): set text(weight: "light", size: scale.h5)
+  show heading.where(level: 5): set text(weight: "semibold", size: scale.h5)
   // show heading.where(level: 5): set block(spacing: 10pt)
   // show heading.where(level: 4): it => {
   //   upper(it)
   // }
+
+  show heading.where(level: 6): set text(weight: "semibold", size: scale.h6)
+
   body
 }
 
