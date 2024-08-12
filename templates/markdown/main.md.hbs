@@ -1,32 +1,34 @@
 # {{ profile.name }}
+> {{profile.experience}} d'expériences - **Disponibilité :** {{profile.availability}}
 
-**{{ profile.title }}**
-
+## {{ profile.title }}
+{{#if presentation}}
 > {{ presentation }}
+{{/if}}
 
 ## Compétences
 
 {{#each skills}}
-- **{{ this.title }}**: {{#join items sep=","}}{{ this }}{{/join}}
+- **{{ this.title }}** : {{#join items sep=", "}}{{ this }}{{/join}}
+{{/each}}
+
+## Formations
+
+{{#each education}}
+- **{{ dates }}, {{ name }}**: {{ location }}
 {{/each}}
 
 ## Expériences
 
 {{#each experiences}}
-
 ### **{{ name }} - {{ title }}**
-
 *{{ dates }}*
-
 > {{ description }}
+{{#join skills sep=", "}}{{ this }}{{/join}}
 
-{{#join skills sep=","}}{{ this }}{{/join}}
-
+#### Réalisations
 {{#each work}}
-#### **{{ title }}**
-
-{{ content }}
-
+  - {{#if title}}**{{ title }}** : {{/if}}{{ content }}
 {{/each}}
 
 {{/each}}
