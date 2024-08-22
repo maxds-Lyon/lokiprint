@@ -1,132 +1,166 @@
 import templates from "./templates/index.mjs";
-import YAML from 'yaml';
-import { promises as fs } from 'fs';
-import { join, basename } from 'path';
+import YAML from "yaml";
+import { promises as fs } from "fs";
+import { join, basename } from "path";
 import chalk from "chalk";
 import { createValidate } from "./createValidate.mjs";
 import { executors } from "./executors.mjs";
+import pino from "pino";
+const logger = pino({ transport: { target: "pino-pretty" } });
 
 function generateTimestampForFilename() {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = (now.getMonth() + 1).toString().padStart(2, '0');
-    const day = now.getDate().toString().padStart(2, '0');
-    const hours = now.getHours().toString().padStart(2, '0');
-    const minutes = now.getMinutes().toString().padStart(2, '0');
-    const seconds = now.getSeconds().toString().padStart(2, '0');
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = (now.getMonth() + 1).toString().padStart(2, "0");
+  const day = now.getDate().toString().padStart(2, "0");
+  const hours = now.getHours().toString().padStart(2, "0");
+  const minutes = now.getMinutes().toString().padStart(2, "0");
+  const seconds = now.getSeconds().toString().padStart(2, "0");
 
-    return `${year}${month}${day}-${hours}${minutes}${seconds}`;
+  return `${year}${month}${day}-${hours}${minutes}${seconds}`;
 }
 
-export const createPublish = ({
-    files, executor, workdir, output, globals
-}) => async function publish() {
+export const createPublish = ({ files, executor, workdir, output, globals }) =>
+  async function publish() {
+    logger.info({ files, executor, workdir, output, globals });
 
-    const templateFunctions = await Promise.all(templates.map((template) => template(executors[executor])));
+    const templateFunctions = await Promise.all(
+      templates.map((template) => template(executors[executor]))
+    );
     const timestamp = generateTimestampForFilename();
     const validate = await createValidate();
 
     async function mergeWithGlobals(config) {
-        if (!globals) {
-            console.log("  ⚠️ No globals specified.");
+      if (!globals) {
+        logger.warn("  ⚠️ No globals specified.");
+        return config;
+      }
 
-            return config;
-        }
-
-        const globalsContent = await fs.readFile(globals, 'utf-8');
-
-        return {
-            ...YAML.parse(globalsContent),
-            ...config
-        };
+      const globalsContent = await fs.readFile(globals, "utf-8");
+      
+      return {
+        ...YAML.parse(globalsContent),
+        ...config,
+      };
     }
 
-    async function executeTemplateAndExtractOutput({ template, data, templateWorkdir, item, simpleItem }) {
-        const resultFile = await template.fn({
-            data: await mergeWithGlobals(data),
-            workdir: templateWorkdir,
-        });
+    async function executeTemplateAndExtractOutput({
+      template,
+      data,
+      templateWorkdir,
+      item,
+      simpleItem,
+    }) {
+      const resultFile = await template.fn({
+        data: await mergeWithGlobals(data),
+        workdir: templateWorkdir,
+      });
 
-        await fs.mkdir(output, { recursive: true });
+      await fs.mkdir(output, { recursive: true });
 
-        const outputFile = join(output, item);
-        const simpleOutputFile = join(output, simpleItem);
+      const outputFile = join(output, item);
+      const simpleOutputFile = join(output, simpleItem);
 
-        await fs.cp(resultFile, outputFile);
-        await fs.cp(resultFile, simpleOutputFile);
+      await fs.cp(resultFile, outputFile);
+      await fs.cp(resultFile, simpleOutputFile);
 
-        console.log(chalk.green(`  ✅ ${item} has been generated`));
+      logger.info(chalk.green(`  ✅ ${item} has been generated`));
 
-        return { data, item, status: 'success', file: outputFile};
+      return { data, item, status: "success", file: outputFile };
     }
 
     async function processTemplateForValidFile(template, name, data) {
-        const templateWorkdir = join(workdir, Math.random().toString(36).slice(-6));
+      const templateWorkdir = join(
+        workdir,
+        Math.random().toString(36).slice(-6)
+      );
 
-        await fs.mkdir(templateWorkdir, { recursive: true });
+      await fs.mkdir(templateWorkdir, { recursive: true });
 
-        const item = `${name}-${timestamp}+${process.env.GITHUB_SHA.slice(0, 7)}.${template.extension}`;
-        const simpleItem = `${name}.${template.extension}`;
+      const item = `${name}-${timestamp}+${process.env.GITHUB_SHA.slice(
+        0,
+        7
+      )}.${template.extension}`;
+      const simpleItem = `${name}.${template.extension}`;
 
-        try {
-            return executeTemplateAndExtractOutput({ template, data, templateWorkdir, item, simpleItem })
-        } catch (err) {
-            console.log(chalk.red(`  ❌ ${item} could not be generated:`));
+      try {
+        return executeTemplateAndExtractOutput({
+          template,
+          data,
+          templateWorkdir,
+          item,
+          simpleItem,
+        });
+      } catch (err) {
+        logger.info(chalk.red(`  ❌ ${item} could not be generated:`));
 
-            console.log('    ' + err.message.split('\n').join('\n    '));
+        logger.info("    " + err.message.split("\n").join("\n    "));
 
-            return { data, item, status: 'error', message: err.message};
-        }
+        return { data, item, status: "error", message: err.message };
+      }
     }
 
     async function processValidFile(name, data) {
-        return await Promise.all(
-            templateFunctions.map(async (template) => processTemplateForValidFile(template, name, data))
-        );
+      return await Promise.all(
+        templateFunctions.map(async (template) =>
+          processTemplateForValidFile(template, name, data)
+        )
+      );
     }
 
     function printYamlErrors(file, data) {
-        console.log(chalk.red(`  ❌ ${file} is invalid`));
+      logger.info(chalk.red(`  ❌ ${file} is invalid`));
 
-        const message = validate.errors
-            .map(({ instancePath, keyword, message }) => `    ${chalk.gray(instancePath.replaceAll('/', '.')) || '<root>'}: ${chalk.yellow(keyword)} ${message}`)
-            .join('\n')
+      const message = validate.errors
+        .map(
+          ({ instancePath, keyword, message }) =>
+            `    ${
+              chalk.gray(instancePath.replaceAll("/", ".")) || "<root>"
+            }: ${chalk.yellow(keyword)} ${message}`
+        )
+        .join("\n");
 
-        console.log(message);
+      logger.info(message);
 
-        return [{ data, item: file, message, status: 'error' }];
+      return [{ data, item: file, message, status: "error" }];
     }
 
     async function processFile(file) {
-        const [name] = basename(file).split('.');
-        const data = YAML.parse(await fs.readFile(file, 'utf-8'));
+      const [name] = basename(file).split(".");
+      const data = YAML.parse(await fs.readFile(file, "utf-8"));
 
-        console.log(`🟣 Processing ${file}:`);
+      logger.info(`🟣 Processing ${file}:`);
 
-        const valid = validate(data);
+      const valid = validate(data);
 
-        if (!valid) {
-            return printYamlErrors(file, data);
-        }
+      if (!valid) {
+        return printYamlErrors(file, data);
+      }
 
-        console.log(chalk.blueBright(`  ${file} is valid`));
+      logger.info(chalk.blueBright(`  ${file} is valid`));
 
-        return processValidFile(name, data);
+      return processValidFile(name, data);
     }
 
     function retrieveYamlFiles() {
-        return files.filter(it => it.endsWith('.yaml') || it.endsWith('.yml'));
+      return files.filter((it) => it.endsWith(".yaml") || it.endsWith(".yml"));
     }
 
     async function processFiles() {
-        const yamlFiles = retrieveYamlFiles();
+      const yamlFiles = retrieveYamlFiles();
 
-        return (await Promise.all(
-            yamlFiles.map((file) => processFile(file))
-        )).flatMap(el => el);
+      return (
+        await Promise.all(yamlFiles.map((file) => processFile(file)))
+      ).flatMap((el) => el);
     }
 
-    console.log(chalk.green('Loaded template functions [' + templateFunctions.map(it => it.id).join(", ") + ']'));
+    logger.info(
+      chalk.green(
+        "Loaded template functions [" +
+          templateFunctions.map((it) => it.id).join(", ") +
+          "]"
+      )
+    );
 
     return processFiles();
-};
+  };

@@ -10,6 +10,8 @@
     "glob": "^10.3.10",
     "handlebars": "^4.7.8",
     "jsonwebtoken": "^9.0.2",
+    "pino": "^9.3.2",
+    "pino-pretty": "^11.2.2",
     "yaml": "^2.3.4",
     "yargs": "^17.7.2"
   }

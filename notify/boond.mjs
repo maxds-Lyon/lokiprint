@@ -3,6 +3,8 @@ import axios from 'axios';
 import FormData from 'form-data';
 import {basename} from "path";
 import * as fs from "fs";
+import pino from "pino";
+const logger = pino({ transport: { target: "pino-pretty" } });
 
 const createToken = () => jwt.sign(
     {
@@ -74,14 +76,14 @@ const createNotifier = () => {
             (document) => document.data.profile.name
         )
 
-        console.log(`🟣 Uploading to boond ${documents.length} documents`);
+        logger.info(`🟣 Uploading to boond ${documents.length} documents`);
 
         await Promise.all(Object.entries(perUser)
             .map(async ([username, documents]) => {
                 const user = await searchUser(username);
 
                 if (!user) {
-                    return console.log('  ✖️ Could not find user ' + username);
+                    return logger.info('  ✖️ Could not find user ' + username);
                 }
 
                 await deletePreviousResumes(user.id);
@@ -95,13 +97,13 @@ const createNotifier = () => {
                     })
                 }
 
-                console.log(
+                logger.info(
                     `  ➖ Uploaded ${documents.length} documents for user ${username}`
                 )
             })
         )
 
-        console.log('  ✅ Successfully uploaded to Boond.');
+        logger.info('  ✅ Successfully uploaded to Boond.');
     };
 }
 

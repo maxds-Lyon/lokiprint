@@ -1,6 +1,8 @@
 import {WebClient} from '@slack/web-api';
 import {promises as fs} from 'fs';
 import {join} from 'path';
+import pino from "pino";
+const logger = pino({ transport: { target: "pino-pretty" } });
 
 const getCache = async (key) => {
     const cacheFolder = join(process.env.CACHE_FOLDER, "slack-notifier");
@@ -13,7 +15,7 @@ const getCache = async (key) => {
             try {
                 JSON.parse(await fs.readFile(join(cacheFolder, key), 'utf-8'))
             } catch (err) {
-                console.log("Cannot read cache: " + err.message);
+                logger.info("Cannot read cache: " + err.message);
             }
         }
     }
@@ -57,10 +59,10 @@ const getSendResults = ({
             const memberId = await findUserWithGithubHandle(userList, username);
 
             if (!memberId) {
-                console.log(`Could not notify [${memberId}]`);
+                logger.info(`Could not notify [${memberId}]`);
             }
 
-            console.log("Going to notify " + memberId);
+            logger.info("Going to notify " + memberId);
 
             return memberId;
         }
@@ -79,7 +81,7 @@ const getSendResults = ({
     }
 
     return async (username, results) => {
-        console.log(`🟣 Sending slack notification`);
+        logger.info(`🟣 Sending slack notification`);
 
         const userId = await getMatchingUserId(username);
 
@@ -117,7 +119,7 @@ ${
             channel_id: convId,
         })
 
-        console.log('  ✅ Successfully sent slack notification.');
+        logger.info('  ✅ Successfully sent slack notification.');
 
     };
 }
