@@ -18,12 +18,6 @@ export default async (executor) => {
         }
     };
 
-    const getTypstVersion = async (workdir) => {
-        const version = await executor({ cwd: workdir, executable: 'typst', command: ['--version'] });
-        logger.info(`Typst version used: ${version.stdout}`);
-        return version.stdout;
-    };
-
     const compileTypst = async (fontDir, workdir) => {
         const compileCommand = [
             'compile',
@@ -46,7 +40,6 @@ export default async (executor) => {
         extension: 'pdf',
         fn: async ({ data, workdir }) => {
             await prepareWorkdir(data, workdir);
-            await getTypstVersion(workdir);
             await compileTypst(join(import.meta.dirname, '.template/fonts'), workdir);
             return join(workdir, 'output.pdf');
         }
