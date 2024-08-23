@@ -19,12 +19,12 @@
 }
 
 #let flex(gap: 0pt, direction: column, body) = {
-  let non-empty-children = body.children.filter(
-    child => child.fields().len() != 0 and ("children" not in child.fields() or child.children.len() != 0)
-  )
+  let non-empty-children = body.children.filter(child => (
+    child.fields().len() != 0 and ("children" not in child.fields() or child.children.len() != 0)
+  ))
 
   direction(
     gap,
-    non-empty-children
+    non-empty-children,
   )
 }

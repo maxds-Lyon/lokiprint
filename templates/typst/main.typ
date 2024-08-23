@@ -11,28 +11,28 @@
 #let content = yaml("data.json")
 
 #styles.default(content.legal-information)[
-    #block(inset: (x: 24pt), flex(
+  #block(
+    inset: (x: 24pt),
+    flex(
       gap: 32pt,
       {
         block(
           inset: (x: 24pt, top: 48pt),
-          title(
-            profile: (
-              name: content.profile.name,
-              title: content.profile.title,
-              tagline: [#content.profile.experience d'XP -- Dispo #content.profile.availability]
-            )
-          )
+          title(profile: (
+            name: content.profile.name,
+            title: content.profile.title,
+            tagline: [#content.profile.experience d'XP -- Dispo #content.profile.availability],
+          )),
         )
 
-        if ("presentation" in content) [ 
+        if ("presentation" in content) [
           #styles.margin-large()[
             #set par(justify: true)
             #presentation-section(content.presentation)
           ]
         ]
 
-        if ("links" in content) [ 
+        if ("links" in content) [
           #styles.margin-large()[
             #set par(justify: true)
             #links-section(content.links)
@@ -44,13 +44,16 @@
         ]
 
         styles.margin-small(
-          competencies(content.skills)
+          competencies(content.skills),
         )
-      })
-    )
+      },
+    ),
+  )
 
-    #pagebreak(weak: true)
-    #block(inset: (x: 24pt, top: 48pt), flex(
+  #pagebreak(weak: true)
+  #block(
+    inset: (x: 24pt, top: 48pt),
+    flex(
       gap: 32pt,
       {
         if ("education" in content) [
@@ -63,30 +66,34 @@
             #education(content.education)
           ]
         ]
-      })
-    )
+      },
+    ),
+  )
 
-    #set page(header: [
+  #set page(
+    header: [
       #place(
         top + right,
         dx: 25pt,
         dy: 34pt,
-        image(".template/logo/maxds-logo-light.svg", height: 200pt)
+        image(".template/logo/maxds-logo-light.svg", height: 200pt),
       )
-    ], margin: (top: 12pt))
+    ],
+    margin: (top: 12pt),
+  )
 
-    #for experience in content.experiences [
-      #pagebreak(weak: true)
-      #block(
-        inset: (top: 48pt, x: 24pt),
-        flex(gap: 24pt)[
-          #styles.margin-large()[
-            #styles.section-heading(fa-briefcase(baseline: -1pt), [Expériences])
-          ]
-          #styles.margin-large()[
-            #experience-block(experience)
-          ]
+  #for experience in content.experiences [
+    #pagebreak(weak: true)
+    #block(
+      inset: (top: 48pt, x: 24pt),
+      flex(gap: 24pt)[
+        #styles.margin-large()[
+          #styles.section-heading(fa-briefcase(baseline: -1pt), [Expériences])
         ]
-      )
-    ]
+        #styles.margin-large()[
+          #experience-block(experience)
+        ]
+      ],
+    )
+  ]
 ]

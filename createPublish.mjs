@@ -20,6 +20,32 @@ function generateTimestampForFilename() {
   return `${year}${month}${day}-${hours}${minutes}${seconds}`;
 }
 
+function logFileGenerationSuccess(item) {
+  logger.info(chalk.green(`  ✅ ${item} has been generated`));
+}
+
+function logFileGenerationError(item, err) {
+  logger.info(chalk.red(`  ❌ ${item} could not be generated:`));
+  logger.info("    " + err.message.split("\n").join("\n    "));
+}
+
+function logValidationFailure(file, validate) {
+  logger.info(chalk.red(`  ❌ ${file} is invalid`));
+  const message = validate.errors
+    .map(
+      ({ instancePath, keyword, message }) =>
+        `    ${
+          chalk.gray(instancePath.replaceAll("/", ".")) || "<root>"
+        }: ${chalk.yellow(keyword)} ${message}`
+    )
+    .join("\n");
+  logger.info(message);
+}
+
+function logValidationSuccess(file) {
+  logger.info(chalk.blueBright(`  ${file} is valid`));
+}
+
 export const createPublish = ({ files, executor, workdir, output, globals }) =>
   async function publish() {
     logger.info({ files, executor, workdir, output, globals });
@@ -37,7 +63,6 @@ export const createPublish = ({ files, executor, workdir, output, globals }) =>
       }
 
       const globalsContent = await fs.readFile(globals, "utf-8");
-      
       return {
         ...YAML.parse(globalsContent),
         ...config,
@@ -57,15 +82,13 @@ export const createPublish = ({ files, executor, workdir, output, globals }) =>
       });
 
       await fs.mkdir(output, { recursive: true });
-
       const outputFile = join(output, item);
       const simpleOutputFile = join(output, simpleItem);
 
       await fs.cp(resultFile, outputFile);
       await fs.cp(resultFile, simpleOutputFile);
 
-      logger.info(chalk.green(`  ✅ ${item} has been generated`));
-
+      logFileGenerationSuccess(item);
       return { data, item, status: "success", file: outputFile };
     }
 
@@ -74,7 +97,6 @@ export const createPublish = ({ files, executor, workdir, output, globals }) =>
         workdir,
         Math.random().toString(36).slice(-6)
       );
-
       await fs.mkdir(templateWorkdir, { recursive: true });
 
       const item = `${name}-${timestamp}+${process.env.GITHUB_SHA.slice(
@@ -92,10 +114,7 @@ export const createPublish = ({ files, executor, workdir, output, globals }) =>
           simpleItem,
         });
       } catch (err) {
-        logger.info(chalk.red(`  ❌ ${item} could not be generated:`));
-
-        logger.info("    " + err.message.split("\n").join("\n    "));
-
+        logFileGenerationError(item, err);
         return { data, item, status: "error", message: err.message };
       }
     }
@@ -108,37 +127,21 @@ export const createPublish = ({ files, executor, workdir, output, globals }) =>
       );
     }
 
-    function printYamlErrors(file, data) {
-      logger.info(chalk.red(`  ❌ ${file} is invalid`));
-
-      const message = validate.errors
-        .map(
-          ({ instancePath, keyword, message }) =>
-            `    ${
-              chalk.gray(instancePath.replaceAll("/", ".")) || "<root>"
-            }: ${chalk.yellow(keyword)} ${message}`
-        )
-        .join("\n");
-
-      logger.info(message);
-
-      return [{ data, item: file, message, status: "error" }];
-    }
-
     async function processFile(file) {
       const [name] = basename(file).split(".");
       const data = YAML.parse(await fs.readFile(file, "utf-8"));
 
       logger.info(`🟣 Processing ${file}:`);
-
       const valid = validate(data);
 
       if (!valid) {
-        return printYamlErrors(file, data);
+        logValidationFailure(file, validate);
+        return [
+          { data, item: file, message: "Validation failed", status: "error" },
+        ];
       }
 
-      logger.info(chalk.blueBright(`  ${file} is valid`));
-
+      logValidationSuccess(file);
       return processValidFile(name, data);
     }
 
@@ -148,7 +151,6 @@ export const createPublish = ({ files, executor, workdir, output, globals }) =>
 
     async function processFiles() {
       const yamlFiles = retrieveYamlFiles();
-
       return (
         await Promise.all(yamlFiles.map((file) => processFile(file)))
       ).flatMap((el) => el);

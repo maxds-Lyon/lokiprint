@@ -4,14 +4,14 @@
 
 
 #let competency-main-skills(
-  list
+  list,
 ) = [
   #for skill in list [
     #box(
       radius: 16pt,
       inset: 6pt,
       fill: tailwind.slate-200,
-      skill
+      skill,
     )
   ]
 
@@ -32,9 +32,9 @@
 ]
 
 #let competency-grid(
-  ..elements
+  ..elements,
 ) = block(inset: (x: -16pt))[
-  
+
   #style(styles => {
     let blocks = elements.pos().map(el => competency-block(el, radius: 4pt))
 
@@ -44,17 +44,17 @@
       columns: 4,
       gutter: 8pt,
       ..blocks.map(el => box(
-          height: (max-height) + 20pt,
-          radius: 8pt,
-          inset: 4pt,
-          fill: tailwind.slate-100,
-          align(top, el)
+        height: (max-height) + 20pt,
+        radius: 8pt,
+        inset: 4pt,
+        fill: tailwind.slate-100,
+        align(top, el),
       ))
     )
   })
 ]
 
-#let create-block-description(name, id, content) =  {
+#let create-block-description(name, id, content) = {
   if id in content {
     return ((name: name, items: content.at(id)))
   }
@@ -67,19 +67,20 @@
   // competency-main-skills(
   //   content.languages + content.frameworks
   // )
-  let rows = content
-      .map((item) => (name: item.title, items: item.items))
-      .fold((), (acc, val) => {
-        if (acc.len() == 0 or acc.last().len() == 4) {
-          return (..acc, (val,))
-        }
+  let rows = content.map(item => (name: item.title, items: item.items)).fold(
+    (),
+    (acc, val) => {
+      if (acc.len() == 0 or acc.last().len() == 4) {
+        return (..acc, (val,))
+      }
 
-        return (..acc.slice(0, -1), (..acc.last(), val))
-      })
+      return (..acc.slice(0, -1), (..acc.last(), val))
+    },
+  )
 
   flex(gap: 8pt)[
     #for row in rows {
-       competency-grid(..row)
+      competency-grid(..row)
     }
   ]
 }

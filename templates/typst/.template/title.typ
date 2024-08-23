@@ -5,7 +5,7 @@
     name: "name",
     title: "title",
     tagline: "tagline",
-  )
+  ),
 ) = {
   let body = [
     #grid(
@@ -17,7 +17,7 @@
   ]
   let image = style(styles => {
     let size = measure(body, styles)
-    image(height: size.height + 2pt,"./logo/maxds-logo.svg")
+    image(height: size.height + 2pt, "./logo/maxds-logo.svg")
   })
 
   block(
@@ -25,8 +25,7 @@
     grid(
       column-gutter: 20pt,
       columns: (auto, 1fr),
-      image,
-      body
-    )
+      image, body,
+    ),
   )
 }

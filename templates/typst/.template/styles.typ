@@ -18,13 +18,13 @@
     background: page-background(color: tailwind.orange-400),
     footer-descent: 0%,
     footer: page-footer(
-      height: footer-size, 
+      height: footer-size,
       background: tailwind.slate-200,
-      content: footerContent
+      content: footerContent,
     ),
-    margin: (x: 0pt, top: 0pt, bottom: footer-size)
+    margin: (x: 0pt, top: 0pt, bottom: footer-size),
   )
-  
+
   set text(font: "Lexend")
   set text(size: scale.p)
 
@@ -58,7 +58,7 @@
 
 #let section-heading(
   icon,
-  text
+  text,
 ) = [
   == #grid(
     columns: (scale.h2, auto, 1fr),
@@ -67,13 +67,21 @@
     align(horizon, text),
     place(
       dy: 11pt,
-      align(horizon, 
-        line(length: 100%, stroke: (paint: gradient.linear(
-          (tailwind.orange-400, 0%),
-          (tailwind.orange-400, 30%),
-          (tailwind.yellow-400, 100%)
-        ), thickness: 3pt, cap: "round"))
-        )
+      align(
+        horizon,
+        line(
+          length: 100%,
+          stroke: (
+            paint: gradient.linear(
+              (tailwind.orange-400, 0%),
+              (tailwind.orange-400, 30%),
+              (tailwind.yellow-400, 100%),
+            ),
+            thickness: 3pt,
+            cap: "round",
+          ),
+        ),
+      ),
     ),
   )
 ]

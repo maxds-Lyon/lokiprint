@@ -1,37 +1,53 @@
-import {promises as fs} from 'fs';
-import {join} from 'path';
+import { promises as fs } from 'fs';
+import { join } from 'path';
+import pino from "pino";
+
+const logger = pino({ transport: { target: "pino-pretty" } });
 
 export default async (executor) => {
-    async function tryExecuteTypst(fontDir, workdir) {
+    const executeTypstCommand = async (commandArgs, workdir) => {
         try {
             await executor({
                 cwd: workdir,
-                image: 'ghcr.io/typst/typst:v0.10.0',
                 executable: 'typst',
-                command: [
-                    'compile',
-                    '--root', workdir,
-                    '--font-path', fontDir,
-                    join(workdir, 'main.typ'),
-                    join(workdir, 'output.pdf')
-                ]
+                command: commandArgs
             });
         } catch (err) {
-            throw new Error(err.stderr);
+            logger.error("Failed to execute Typst command:", err);
+            throw new Error(`Typst execution failed: ${err.message}`);
         }
-    }
+    };
+
+    const getTypstVersion = async (workdir) => {
+        const version = await executor({ cwd: workdir, executable: 'typst', command: ['--version'] });
+        logger.info(`Typst version used: ${version.stdout}`);
+        return version.stdout;
+    };
+
+    const compileTypst = async (fontDir, workdir) => {
+        const compileCommand = [
+            'compile',
+            '--root', workdir,
+            '--font-path', fontDir,
+            join(workdir, 'main.typ'),
+            join(workdir, 'output.pdf')
+        ];
+        await executeTypstCommand(compileCommand, workdir);
+    };
+
+    const prepareWorkdir = async (data, workdir) => {
+        await fs.writeFile(join(workdir, 'data.json'), JSON.stringify(data), 'utf-8');
+        await fs.cp(join(import.meta.dirname, '.template'), join(workdir, '.template'), { recursive: true });
+        await fs.cp(join(import.meta.dirname, 'main.typ'), join(workdir, 'main.typ'));
+    };
 
     return {
         id: 'typst',
         extension: 'pdf',
-        fn: async ({data, workdir}) => {
-            await fs.writeFile(workdir + '/data.json', JSON.stringify(data), 'utf-8');
-
-            await fs.cp(join(import.meta.dirname, '.template'), join(workdir, '.template'), { recursive: true });
-            await fs.cp(join(import.meta.dirname, 'main.typ'), join(workdir, 'main.typ'));
-
-            await tryExecuteTypst(join(import.meta.dirname, '.template/fonts'), workdir);
-
+        fn: async ({ data, workdir }) => {
+            await prepareWorkdir(data, workdir);
+            await getTypstVersion(workdir);
+            await compileTypst(join(import.meta.dirname, '.template/fonts'), workdir);
             return join(workdir, 'output.pdf');
         }
     };

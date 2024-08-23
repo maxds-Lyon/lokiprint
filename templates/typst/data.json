@@ -1,0 +1,116 @@
+{
+  "profile": {
+    "name": "Émilie Durand",
+    "pronouns": "(elle)",
+    "title": "Architecte Logiciel",
+    "experience": "8 ans",
+    "availability": "Mars 2025"
+  },
+  "presentation": "Passionnée par la conception de systèmes complexes et l'optimisation des performances, Émilie a une forte expérience en architecture de logiciels et en gestion d'équipe.",
+  "skills": [
+    {
+      "title": "Langages de programmation",
+      "items": [
+        "Java",
+        "Scala",
+        "Kotlin"
+      ]
+    },
+    {
+      "title": "Frameworks et bibliothèques",
+      "items": [
+        "Spring Boot",
+        "Akka",
+        "Play Framework"
+      ]
+    },
+    {
+      "title": "Outils de développement",
+      "items": [
+        "IntelliJ IDEA",
+        "Eclipse",
+        "Git"
+      ]
+    },
+    {
+      "title": "Méthodologies",
+      "items": [
+        "Agile",
+        "Scrum",
+        "DevOps"
+      ]
+    }
+  ],
+  "links": [
+    {
+      "icon": "github",
+      "text": "emiliedurand",
+      "url": "https://github.com/emiliedurand"
+    },
+    {
+      "icon": "linkedin",
+      "text": "emilie-durand",
+      "url": "https://linkedin.com/in/emilie-durand"
+    }
+  ],
+  "education": [
+    {
+      "name": "Master en Informatique",
+      "location": "École Polytechnique",
+      "dates": "2010 - 2012"
+    },
+    {
+      "name": "Licence en Informatique",
+      "location": "Université de Bordeaux",
+      "dates": "2007 - 2010"
+    }
+  ],
+  "experiences": [
+    {
+      "name": "Capgemini",
+      "title": "Architecte Logiciel",
+      "dates": "Janvier 2018 - Présent",
+      "description": "Conception et mise en œuvre de solutions logicielles pour divers clients internationaux, gestion d'équipes de développement, et amélioration continue des processus.",
+      "skills": [
+        "Java",
+        "Microservices",
+        "Spring Boot"
+      ],
+      "work": [
+        {
+          "title": "Développement de microservices",
+          "content": "Conception et développement de microservices pour améliorer la scalabilité et la maintenabilité des systèmes."
+        }
+      ]
+    },
+    {
+      "name": "Sopra Steria",
+      "title": "Développeur Senior",
+      "dates": "Mars 2012 - Décembre 2017",
+      "description": "Développement de logiciels sur mesure, principalement en Java et Scala, pour des clients dans le secteur financier.",
+      "skills": [
+        "Scala",
+        "Akka",
+        "Play Framework"
+      ],
+      "work": [
+        {
+          "title": "Développement d'applications financières",
+          "content": "Création et maintenance d'applications pour des transactions financières sécurisées et performantes."
+        }
+      ]
+    }
+  ],
+  "legal-information": {
+    "header": "Digital Solutions Inc.",
+    "sub": "N° de SIRET : 12345678901234",
+    "contact1": {
+      "name": "Marc Lavoine",
+      "phone": "06 12 34 56 78"
+    },
+    "contact2": {
+      "name": "Sophie Marceau",
+      "phone": "06 87 65 43 21"
+    }
+  }
+}

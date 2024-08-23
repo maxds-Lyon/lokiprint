@@ -7,7 +7,7 @@
 #let card-padding = 24pt
 
 #let experience-block(
-  content
+  content,
 ) = block(
   inset: card-padding,
   radius: 16pt,
@@ -25,15 +25,23 @@
             column-gutter: gap,
             align: bottom,
             columns: (offset, 1fr, auto),
-            pad(right: (card-padding - gap), align(bottom+center, text(fill: tailwind.slate-400, tracking: 1.4pt, weight: "semibold", baseline: -1pt)[#if ("badge" in content) [#content.badge] else []])),
+            pad(
+              right: (card-padding - gap),
+              align(
+                bottom + center,
+                text(fill: tailwind.slate-400, tracking: 1.4pt, weight: "semibold", baseline: -1pt)[#if (
+                    "badge" in content
+                  ) [#content.badge] else []],
+              ),
+            ),
             text(fill: tailwind.orange-500)[=== #content.name],
-            align(bottom, text(baseline: -1pt, if ("dates" in content) [#content.dates] else []))
-          )
+            align(bottom, text(baseline: -1pt, if ("dates" in content) [#content.dates] else [])),
+          ),
         )
 
         #if ("title" in content) [
           #block(
-            heading(level: 4, content.title)
+            heading(level: 4, content.title),
           )
         ]
         #if ("description" in content) [
@@ -66,12 +74,12 @@
               inset: 6pt,
               fill: white,
               radius: 2pt,
-              el
+              el,
             )
 
-          }
+          },
         )
       ]
-    ]
+    ],
   )
 ]

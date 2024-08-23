@@ -31,12 +31,15 @@
   #for experience in contents.experiences [
     === #experience.name
 
-    #heading(level: 4, [
-      #experience.title
-      #h(12pt)
-      #set text(size: 12pt, weight: "light")
-      #experience.dates
-    ])
+    #heading(
+      level: 4,
+      [
+        #experience.title
+        #h(12pt)
+        #set text(size: 12pt, weight: "light")
+        #experience.dates
+      ],
+    )
 
     #experience.description
 

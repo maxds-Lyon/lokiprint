@@ -1,3 +1,1 @@
-#let about-section(content) = block(
-
-)[content]
+#let about-section(content) = block()[content]
