@@ -132,20 +132,29 @@ export const notifySlack = (argv) => {
   const token = process.env.SLACK_TOKEN;
   const slackNotify = argv["slack-notify"];
 
-  if (!slackNotify) return () => Promise.resolve();
+  if (!slackNotify || !token) {
+    logger.info("Slack notification is disabled or Slack token is missing.");
+    return () => Promise.resolve();
+  }
 
   return async (results) => {
-    const userMappingCache = await getCache("user_mappings");
-    const cache = (await userMappingCache.read()) ?? {};
+    try {
+      const userMappingCache = await getCache("user_mappings");
+      const cache = (await userMappingCache.read()) ?? {};
 
-    const sendResults = getSendResults({
-      web: new WebClient(token),
-      usernameField: slackNotify,
-      cache,
-    });
+      const sendResults = getSendResults({
+        web: new WebClient(token),
+        usernameField: slackNotify,
+        cache,
+      });
 
-    await sendResults(process.env.GITHUB_ACTOR, results);
+      await sendResults(process.env.GITHUB_ACTOR, results);
 
-    await userMappingCache.write(cache);
+      await userMappingCache.write(cache);
+    } catch (error) {
+      logger.error(
+        `Error sending results on Slack : ${error.message}`
+      );
+    }
   };
 };
