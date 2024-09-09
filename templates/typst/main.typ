@@ -52,17 +52,17 @@
 
   #pagebreak(weak: true)
 
-  if ("education" in content) [
+  #if ("education" in content) [
     #block(
       inset: (x: 24pt, top: 48pt),
       flex(
         gap: 32pt,
         {
-          #styles.margin-large()[
+          styles.margin-large()[
             #styles.section-heading(fa-user-graduate(baseline: -2pt), [Formation])
           ]
 
-          #styles.margin-large()[
+          styles.margin-large()[
             #education(content.education)
           ]
         },
