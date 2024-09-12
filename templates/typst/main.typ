@@ -19,7 +19,7 @@
         block(
           inset: (x: 24pt, top: 48pt),
           title(profile: (
-            name: content.profile.name,
+            name: content.profile.trigram,
             title: content.profile.title,
             tagline: [#content.profile.experience d'XP -- Dispo #content.profile.availability],
           )),
@@ -50,25 +50,24 @@
     ),
   )
 
-  #pagebreak(weak: true)
-  #block(
-    inset: (x: 24pt, top: 48pt),
-    flex(
-      gap: 32pt,
-      {
-        if ("education" in content) [
-
-          #styles.margin-large()[
+  #if ("education" in content) [
+    #pagebreak(weak: true)
+    #block(
+      inset: (x: 24pt, top: 48pt),
+      flex(
+        gap: 32pt,
+        {
+          styles.margin-large()[
             #styles.section-heading(fa-user-graduate(baseline: -2pt), [Formation])
           ]
 
-          #styles.margin-large()[
+          styles.margin-large()[
             #education(content.education)
           ]
-        ]
-      },
-    ),
-  )
+        },
+      ),
+    )
+  ]
 
   #set page(
     header: [

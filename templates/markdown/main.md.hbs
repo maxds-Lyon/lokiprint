@@ -1,4 +1,4 @@
-# {{ profile.name }}
+# {{ profile.trigram }}
 > {{profile.experience}} d'expériences - **Disponibilité :** {{profile.availability}}
 
 ## {{ profile.title }}
@@ -12,11 +12,13 @@
 - **{{ this.title }}** : {{#join items sep=", "}}{{ this }}{{/join}}
 {{/each}}
 
+{{#if education}}
 ## Formations
 
 {{#each education}}
 - **{{ dates }}, {{ name }}**: {{ location }}
 {{/each}}
+{{/if}}
 
 ## Expériences
 

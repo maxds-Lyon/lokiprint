@@ -132,8 +132,12 @@ export const notifySlack = (argv) => {
   const token = process.env.SLACK_TOKEN;
   const slackNotify = argv["slack-notify"];
 
-  if (!slackNotify || !token) {
-    logger.info("Slack notification is disabled or Slack token is missing.");
+  if (!slackNotify) {
+    logger.info("La notification Slack est désactivée.");
+    return () => Promise.resolve();
+  }
+  if (!token) {
+    logger.info("Le jeton Slack est manquant.");
     return () => Promise.resolve();
   }
 

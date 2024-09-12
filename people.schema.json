@@ -6,6 +6,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "meta": {
+          "$ref": "#/definitions/Meta"
+        },
         "profile": {
           "$ref": "#/definitions/Profile"
         },
@@ -40,6 +43,64 @@
       "required": ["experiences", "profile", "skills"],
       "title": "People description"
     },
+    "Meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "idBoond": {
+          "type": "integer"
+        },
+        "firstname": {
+          "type": "string"
+        },
+        "lastname": {
+          "type": "string"
+        }
+      },
+      "required": ["idBoond", "firstname", "lastname"],
+      "title": "Meta"
+    },
+    "Profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "trigram": {
+          "type": "string"
+        },
+        "pronouns": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "experience": {
+          "type": "string"
+        },
+        "availability": {
+          "type": "string"
+        }
+      },
+      "required": ["availability", "experience", "trigram", "title"],
+      "title": "Profile"
+    },
+    "Skill": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["items", "title"],
+      "title": "Skill"
+    },
+
     "Education": {
       "type": "object",
       "additionalProperties": false,
@@ -123,46 +184,6 @@
       },
       "required": ["icon", "text", "url"],
       "title": "Link"
-    },
-    "Profile": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "pronouns": {
-          "type": "string"
-        },
-        "title": {
-          "type": "string"
-        },
-        "experience": {
-          "type": "string"
-        },
-        "availability": {
-          "type": "string"
-        }
-      },
-      "required": ["availability", "experience", "name", "title"],
-      "title": "Profile"
-    },
-    "Skill": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "title": {
-          "type": "string"
-        },
-        "items": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      },
-      "required": ["items", "title"],
-      "title": "Skill"
     }
   }
 }
